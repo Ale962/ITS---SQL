@@ -28,17 +28,18 @@ WHERE volo.comp = 'MagicFly'
 GROUP BY volo.comp;
 
 --5
-SELECT ae.codice, ae.nome aeroporto, co.nome compagnia, min(co.annofondaz) anno_fondazione
+SELECT ae.codice, ae.nome aeroporto, min(co.annofondaz) anno_fondazione
 FROM compagnia as co, arrpart as ap, aeroporto as ae
-WHERE ap.arrivo = ae.codice OR ap.partenza = ae.codice
+WHERE (ap.arrivo = ae.codice OR ap.partenza = ae.codice)
 AND ap.comp = co.nome
-GROUP BY (ae.codice, ae.nome, co.nome);
+GROUP BY (ae.codice, ae.nome);
 
 --6
-SELECT lu.nazione, count(ar.arrivo)
-FROM arrpart as ar, luogoaeroporto as lu
-WHERE ar.partenza = lu.aeroporto
-GROUP BY lu.nazione;
+SELECT lu1.nazione, count(DISTINCT lu2.nazione)
+FROM arrpart as ar, luogoaeroporto as lu1, luogoaeroporto as lu2
+WHERE ar.partenza = lu1.aeroporto
+AND ar.arrivo = lu2.aeroporto
+GROUP BY lu1.nazione;
 
 --7
 SELECT arp.codice, arp.nome, avg(v.durataMinuti) durata_media_voli
